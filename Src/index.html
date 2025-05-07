@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Countdown Nghỉ Lễ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f8f9ff;
+            min-height: 100vh;
+        }
+
+        /* Tet Theme with Background Image */
+        .tet-theme {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+                        url('Pic/tet.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #ff4d4d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes swingFirecracker {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* Hung Kings Theme with Rotating Drum */
+        .hung-kings-theme {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+                        url('Pic/TrongDong.png');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #d4a017;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drum-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .rotating-drum {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
+            background: url('Pic/TrongDong.png') no-repeat center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            animation: rotateDrum 20s linear infinite;
+        }
+
+        @keyframes rotateDrum {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Liberation Day and National Day Theme */
+        .liberation-theme, .national-theme {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+                        url('Pic/Vietnam.png');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #e53935;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Mid-Autumn Theme */
+        .mid-autumn-theme {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+                        url('Pic/moon.png');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #9c27b0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Enhanced Fireworks Animations */
+        .firework {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .firework-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+            transform: scale(1);
+                opacity: 0;
+        }
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateY(100%);
+                opacity: 1;
+        }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0%);
+                opacity: 0;
+            }
+        }
+
+        /* New Year Theme with contained fireworks */
+        .new-year-theme {
+            background: linear-gradient(135deg, #f0fff4, #e6ffe9);
+            border: 2px solid #4caf50;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .firework { /* Re-defined, ensure this is intended or merge */
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out infinite; /* Uses the same explode keyframe name */
+        }
+
+        /* Keyframes for New Year theme explode, might conflict if not careful */
+        /* @keyframes explode { ... } */ /* Already defined above */
+
+
+        .new-year-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50 10v80M10 50h80M20 20l60 60M80 20l-60 60' stroke='%234caf50' stroke-width='2' stroke-opacity='0.2'/%3E%3C/svg%3E");
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        /* Modal Styles */
+        .modal-overlay { /* This ID is not used in HTML, #modalOverlay is used */
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        #modalOverlay .modal { /* Targeting .modal inside #modalOverlay */
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        #modalOverlay .modal.active { /* Targeting .modal.active inside #modalOverlay */
+            transform: scale(1);
+            opacity: 1;
+        }
+
+
+        /* Animation Classes */
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        /* Time Block Styles */
+        .time-block {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .time-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add Button Styles */
+        .add-button {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            transition: all 0.3s ease;
+        }
+
+        .add-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Ensure fireworks container is properly bounded */
+        .fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Theme Switcher Button */
+        .theme-switch {
+            background: none;
+            border: 2px solid #4f46e5;
+            color: #4f46e5;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .theme-switch:hover {
+            background: #4f46e5;
+            color: white;
+        }
+
+        /* Simple Theme Styles */
+        .simple-theme {
+            --simple-primary: #2d3748;
+            --simple-secondary: #4a5568;
+            --simple-border: #e2e8f0;
+            --simple-background: #f7fafc;
+        }
+
+        .simple-theme .countdown-card {
+            background: var(--simple-background) !important;
+            border: 1px solid var(--simple-border) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .simple-theme .countdown-card::before,
+        .simple-theme .countdown-card .rotating-drum, /* Ensure rotating drum is hidden in simple theme */
+        .simple-theme .countdown-card .fireworks-container { /* Ensure fireworks are hidden in simple theme */
+            display: none !important;
+        }
+
+
+        .simple-theme .countdown-card h3 { /* More specific selector for title */
+            color: var(--simple-primary) !important;
+        }
+
+        .simple-theme .countdown-card h3 span { /* More specific selector for note */
+            color: var(--simple-secondary) !important;
+        }
+        .simple-theme .countdown-card .festival-icon {
+            color: var(--simple-primary) !important;
+        }
+
+
+        .simple-theme .time-block {
+            background: var(--simple-background) !important;
+            border: 1px solid var(--simple-border) !important;
+        }
+
+        .simple-theme .time-value {
+            color: var(--simple-primary) !important;
+        }
+
+        .simple-theme .time-label {
+            color: var(--simple-secondary) !important;
+        }
+
+        .simple-theme .rotating-drum,
+        .simple-theme .fireworks-container {
+            display: none !important;
+        }
+
+        /* Animation for theme transition */
+        .countdown-card {
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Smoother theme transition */
+        }
+    </style>
+</head>
+<body class="p-6"> <!-- Removed flex, flex-col, items-center from body for now -->
+    <header class="text-center mb-12 relative">
+        <div class="flex items-center justify-center gap-4">
+        <h1 class="text-5xl font-bold mb-4 text-indigo-600">
+            Countdown Nghỉ Lễ
+        </h1>
+            <button id="themeSwitch" class="theme-switch">
+                <i class="fas fa-palette"></i>
+                <span class="theme-text">Đổi Giao Diện</span>
+            </button>
+        </div>
+        <p class="text-gray-600">Đếm ngược đến những ngày lễ đặc biệt của Việt Nam</p>
+    </header>
+
+    <!-- Main Countdown - Tet -->
+    <section id="mainCountdown" class="tet-theme countdown-card rounded-2xl p-8 mb-12 max-w-6xl mx-auto shadow-lg relative">
+        <div class="flex items-center justify-center mb-4">
+            <i class="fas fa-lantern festival-icon text-red-500"></i> <!-- Added festival-icon class -->
+            <h2 id="main-title" class="text-3xl font-bold text-red-600 ml-2"> <!-- Added ml-2 for spacing -->
+            Tết Nguyên Đán
+        </h2>
+        </div>
+        <h3 id="main-note" class="text-lg text-red-400 mb-8 text-center">
+            (âm lịch)
+        </h3>
+        <div id="countdown-lunar" class="flex flex-wrap justify-center gap-6">
+            <div class="time-block text-center p-4 min-w-[120px]">
+                <span id="lunar-month" class="text-5xl font-bold block mb-2 text-red-600 time-value">0</span>
+                <span class="text-sm text-red-400 time-label">Tháng</span>
+            </div>
+            <div class="time-block text-center p-4 min-w-[120px]">
+                <span id="lunar-day" class="text-5xl font-bold block mb-2 text-red-600 time-value">0</span>
+                <span class="text-sm text-red-400 time-label">Ngày</span>
+            </div>
+            <div class="time-block text-center p-4 min-w-[120px]">
+                <span id="lunar-hour" class="text-5xl font-bold block mb-2 text-red-600 time-value">00</span>
+                <span class="text-sm text-red-400 time-label">Giờ</span>
+            </div>
+            <div class="time-block text-center p-4 min-w-[120px]">
+                <span id="lunar-minute" class="text-5xl font-bold block mb-2 text-red-600 time-value">00</span>
+                <span class="text-sm text-red-400 time-label">Phút</span>
+            </div>
+            <div class="time-block text-center p-4 min-w-[120px]">
+                <span id="lunar-second" class="text-5xl font-bold block mb-2 text-red-600 time-value">00</span>
+                <span class="text-sm text-red-400 time-label">Giây</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secondary Countdowns -->
+    <section id="smallCountdowns" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <!-- Các ô countdown nhỏ sẽ được JavaScript chèn vào TRƯỚC nút này -->
+        <div id="addCountdown" class="add-button rounded-xl p-6 flex items-center justify-center cursor-pointer text-white shadow-lg">
+            <i class="fas fa-plus text-4xl"></i>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="modal rounded-2xl p-8 w-full max-w-md mx-4"> <!-- .modal.active sẽ được JS thêm/xóa -->
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Tạo bộ đếm mới</h2>
+            <form id="customCountdownForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tên bộ đếm</label>
+                    <input type="text" id="customName" class="w-full border-2 border-indigo-100 rounded-lg p-3 focus:outline-none focus:border-indigo-500" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ngày đích</label>
+                    <input type="date" id="customDate" class="w-full border-2 border-indigo-100 rounded-lg p-3 focus:outline-none focus:border-indigo-500" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Giờ đích</label>
+                    <input type="time" id="customTime" class="w-full border-2 border-indigo-100 rounded-lg p-3 focus:outline-none focus:border-indigo-500" value="00:00" />
+                </div>
+                <div class="flex items-center space-x-32">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="customLunar" class="w-5 h-5 rounded border-indigo-500 text-indigo-600 focus:ring-indigo-500" />
+                        <label for="customLunar" class="ml-2 text-sm font-medium text-gray-700">Âm lịch</label>
+                    </div>
+                    <div class="flex items-center">
+                        <label for="customColor" class="mr-2 text-sm font-medium text-gray-700">Màu:</label>
+                        <input type="color" id="customColor" class="w-6 h-7 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-500" value="#4f46e5" />
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" id="cancelBtn" class="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors">
+                        Hủy
+                    </button>
+                    <button type="submit" class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors">
+                        Tạo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/duration.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
