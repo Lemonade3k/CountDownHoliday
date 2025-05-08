@@ -1,0 +1,8 @@
+/*
+  File này có thể được sử dụng cho các style toàn cục bổ sung
+  không được bao gồm trong Tailwind CSS hoặc các style theo component.
+  Phần lớn CSS toàn cục ban đầu đã được tích hợp vào src/index.css
+  cùng với các chỉ thị của Tailwind.
+  Hãy xem xét liệu file này có thực sự cần thiết hay nội dung của nó
+  có thể được gộp vào src/index.css.
+*/
