@@ -3,83 +3,97 @@ import Header from './components/Header';
 import CountdownCard from './components/CountdownCard';
 import Modal from './components/Modal';
 import AddCountdownButton from './components/AddCountdownButton';
-import { CountdownData } from './types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useTheme from './hooks/useTheme'; // Thêm import
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { CountdownData, CustomCountdownFormData } from './types';
+import useTheme from './hooks/useTheme';
 
 // Dữ liệu countdown mẫu - bạn sẽ muốn lấy dữ liệu này từ API, localStorage hoặc file cấu hình
 const initialMainCountdown: CountdownData = {
-    id: 'tet',
-    name: 'Tết Nguyên Đán',
-    date: '2025-01-29', // Cần cập nhật ngày Tết hàng năm, hoặc có logic tính toán
-    isLunar: true, // Sẽ cần logic chuyển đổi ngày Âm Lịch
-    themeClass: 'tet-theme',
-    iconClass: 'fas fa-lantern', // Sử dụng class string của FontAwesome
-    textColorBase: 'text-red-600',
-    textColorAccent: 'text-red-400',
+    id: 'main-lunar',
+    title: 'Tết Nguyên Đán',
     note: '(âm lịch)',
-};
+    targetDate: '2025-01-29T00:00:00', // Example: Year of the Snake
+        isLunar: true,
+    themeClass: 'tet-theme', // Defined in App.css or global styles
+    icon: 'fa-firework', // Example, ensure this icon name is valid if using FontAwesome
+    color: 'red-600', // Tailwind color class
+    textColor: 'text-red-700',
+    textColorAccent: 'text-red-500',
+    showSeconds: true,
+        };
 
 const initialSecondaryCountdowns: CountdownData[] = [
     {
         id: 'hungkings',
-        name: 'Giỗ Tổ Hùng Vương',
-        date: '2025-04-08', // Mùng 10 tháng 3 Âm lịch (ví dụ, cần logic tính)
+        title: 'Giỗ Tổ Hùng Vương',
+        note: '(âm lịch)',
+        targetDate: '2025-04-06T00:00:00', // Example: 10th day of 3rd lunar month 2025
         isLunar: true,
         themeClass: 'hung-kings-theme',
-        iconClass: 'fas fa-drum',
-        textColorBase: 'text-yellow-700',
-        textColorAccent: 'text-yellow-500',
-        note: '(mùng 10/3 âm lịch)',
+        icon: 'fa-drum',
+        color: 'yellow-700',
+        textColor: 'text-yellow-800',
+        textColorAccent: 'text-yellow-600',
+        showSeconds: false,
     },
-    // Thêm các ngày lễ khác ở đây
+    {
+        id: 'april30',
+        title: 'Ngày 30 tháng 4',
+        note: 'Giải phóng miền Nam',
+        targetDate: '2025-04-30T00:00:00',
+        isLunar: false,
+        themeClass: 'liberation-theme',
+        icon: 'fa-dove',
+        color: 'blue-500',
+        textColor: 'text-blue-700',
+        textColorAccent: 'text-blue-500',
+        showSeconds: false,
+    },
+    // Add more initial countdowns as needed
 ];
 
 function App() {
-    const [mainCountdown, setMainCountdown] = useState<CountdownData>(initialMainCountdown);
+    // setMainCountdown is not used, so it can be omitted from destructuring if mainCountdown is static
+    const [mainCountdown, /* setMainCountdown */] = useState<CountdownData>(initialMainCountdown);
     const [secondaryCountdowns, setSecondaryCountdowns] = useState<CountdownData[]>(initialSecondaryCountdowns);
-    const [isModalOpen, setIsModalOpen] = useState(false);    
-    const [theme, toggleTheme, themeButtonText] = useTheme();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [_currentTheme, toggleTheme, themeButtonText] = useTheme(); // _currentTheme to avoid unused var warning
 
+    // useEffect for any side effects, e.g., loading countdowns from localStorage
+    useEffect(() => {
+        // console.log("Current theme:", _currentTheme);
+        // Potentially load saved custom countdowns here
+    }, [_currentTheme]);
 
-    // TODO: Implement adding custom countdown
-    const handleAddCustomCountdown = (data: { name: string; date: string; time: string; isLunar: boolean; color: string }) => {
+    const handleAddCustomCountdown = (data: CustomCountdownFormData) => {
         const newCountdown: CountdownData = {
-            id: new Date().toISOString(), // Unique ID
-            name: data.name,
-            date: data.date,
-            time: data.time,
+            id: `custom-${Date.now()}`,
+            title: data.name,
+            targetDate: `${data.date}T${data.time || '00:00:00'}`,
             isLunar: data.isLunar,
-            themeClass: `custom-theme border-2 rounded-xl shadow-lg p-6`, // Basic theme for custom
-            iconClass: 'fas fa-star', // Default icon
-            textColorBase: `text-[${data.color}]`, // Sử dụng màu người dùng chọn
-            textColorAccent: `text-[${data.color}] opacity-75`,
+            note: data.isLunar ? '(âm lịch)' : (data.name.toLowerCase().includes("tết") ? '' : 'Sự kiện tùy chỉnh'),
+            themeClass: 'custom-default-theme bg-gray-100 border-gray-300', // A generic theme
+            icon: 'fa-calendar-plus',
+            color: 'gray-500',
+            textColor: 'text-gray-800',
+            textColorAccent: 'text-gray-600',
+            showSeconds: false, // Default for custom
         };
-        setSecondaryCountdowns(prev => [...prev, newCountdown]);
+        setSecondaryCountdowns((prev: CountdownData[]) => [...prev, newCountdown]);
         setIsModalOpen(false);
-        // TODO: Save to localStorage
     };
 
-    // TODO: Load custom countdowns from localStorage on mount
-    useEffect(() => {
-        // const savedCustomCountdowns = localStorage.getItem('customCountdowns');
-        // if (savedCustomCountdowns) {
-        // setSecondaryCountdowns(prev => [...prev, ...JSON.parse(savedCustomCountdowns)]);
-        // }
-    }, []);
-
     return (
-        <div className={`p-6 min-h-screen`}> {/* Bỏ 'simple-theme-bg' vì body đã được xử lý bởi useTheme */}
+        // The body class is handled by the useTheme hook
+        <div className={`p-4 sm:p-6 min-h-screen bg-gray-50 dark:bg-gray-900 simple-theme:bg-gray-100`}>
             <Header onThemeSwitch={toggleTheme} currentThemeText={themeButtonText} />
 
-            <CountdownCard countdown={mainCountdown} isMain={true} />
+            {mainCountdown && <CountdownCard countdown={mainCountdown} isMain={true} />}
 
-            <section id="smallCountdowns" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mt-12">
-                {secondaryCountdowns.map(cd => (
+            <section id="smallCountdowns" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto mt-8 sm:mt-12">
+                {secondaryCountdowns.map((cd: CountdownData) => (
                     <CountdownCard key={cd.id} countdown={cd} />
                 ))}
-+                <AddCountdownButton onClick={() => setIsModalOpen(true)} />
+                <AddCountdownButton onClick={() => setIsModalOpen(true)} />
             </section>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleAddCustomCountdown} />

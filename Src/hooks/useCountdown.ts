@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { TimeLeft } from '../types';
 
 dayjs.extend(duration);
+
+export interface TimeLeft {
+    // months?: number; // Optional, if you want to include months
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+}
 
 const useCountdown = (targetDate: string, targetTime?: string, isLunar: boolean = false): TimeLeft => {
     // Placeholder for lunar conversion - this needs actual implementation

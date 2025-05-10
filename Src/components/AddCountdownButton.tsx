@@ -1,6 +1,6 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface AddCountdownButtonProps {
     onClick: () => void;
@@ -8,13 +8,15 @@ interface AddCountdownButtonProps {
 
 const AddCountdownButton: React.FC<AddCountdownButtonProps> = ({ onClick }) => {
     return (
-        <div
+        <button
             onClick={onClick}
-            className="add-button rounded-xl p-6 flex items-center justify-center cursor-pointer text-white shadow-lg hover-scale" // Class 'hover-scale' từ CSS gốc
-            title="Thêm bộ đếm mới"
+            className="add-button bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-lg p-6 shadow-lg flex flex-col items-center justify-center min-h-[150px] hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+            aria-label="Add new countdown"
         >
-            <FontAwesomeIcon icon={faPlus} className="text-4xl" />
-        </div>
+            {/* <FontAwesomeIcon icon={faPlus} className="text-3xl sm:text-4xl mb-2" /> */}
+            <span className="text-3xl sm:text-4xl mb-2">+</span>
+            <span className="text-sm font-medium">Thêm Bộ Đếm</span>
+        </button>
     );
 };
 

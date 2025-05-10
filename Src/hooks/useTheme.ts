@@ -1,28 +1,49 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type Theme = 'default' | 'simple';
-
+type Theme = 'light' | 'dark' | 'simple'; // Example themes
 const useTheme = (): [Theme, () => void, string] => {
     const [theme, setTheme] = useState<Theme>(() => {
-        const storedTheme = localStorage.getItem('appTheme') as Theme | null;
-        // Đảm bảo rằng nếu giá trị lưu trữ không hợp lệ, nó sẽ mặc định là 'default'
-        return (storedTheme === 'default' || storedTheme === 'simple') ? storedTheme : 'default';
+        const storedTheme = localStorage.getItem('countdownAppTheme') as Theme | null;
+        return storedTheme || 'light'; // Default theme
     });
+    const [themeButtonText, setThemeButtonText] = useState<string>('Đổi Giao Diện');
 
-    useEffect(() => {
-        if (theme === 'simple') {
-            document.body.classList.add('simple-theme');
-        } else {
-            document.body.classList.remove('simple-theme');
+    const applyThemeToBody = useCallback((selectedTheme: Theme) => {
+        document.body.classList.remove('light-theme', 'dark-theme', 'simple-theme'); // Remove all theme classes
+        if (selectedTheme === 'simple') {
+            document.body.classList.add('simple-theme'); // Assumes 'simple-theme' class exists in CSS
+            setThemeButtonText('Giao Diện Đầy Đủ');
+        } else if (selectedTheme === 'dark') {
+            document.body.classList.add('dark-theme'); // Assumes 'dark-theme' class exists
+            setThemeButtonText('Giao Diện Sáng');
         }
-        localStorage.setItem('appTheme', theme);
-    }, [theme]);
-
-    const toggleTheme = useCallback(() => {
-        setTheme(prevTheme => (prevTheme === 'default' ? 'simple' : 'default'));
+         else { // light theme
+            document.body.classList.add('light-theme');
+            setThemeButtonText('Giao Diện Đơn Giản');
+        }
     }, []);
 
-    const themeButtonText = theme === 'simple' ? 'Giao Diện Mặc Định' : 'Giao Diện Đơn Giản';
+    useEffect(() => {
+        applyThemeToBody(theme);
+    }, [theme, applyThemeToBody]);
+    const toggleTheme = () => {
+        setTheme(prevTheme => {
+            let nextTheme: Theme;
+            if (prevTheme === 'light') nextTheme = 'simple';
+            else if (prevTheme === 'simple') nextTheme = 'dark'; // Example cycle: light -> simple -> dark -> light
+            else nextTheme = 'light';
+            
+            localStorage.setItem('countdownAppTheme', nextTheme);
+            return nextTheme;
+        });
+    };
+
+    // Update button text based on current theme (could be more sophisticated)
+    useEffect(() => {
+        if (theme === 'simple') setThemeButtonText('Giao Diện Đầy Đủ');
+        else if (theme === 'dark') setThemeButtonText('Giao Diện Sáng');
+        else setThemeButtonText('Giao Diện Đơn Giản');
+    }, [theme]);
 
     return [theme, toggleTheme, themeButtonText];
 };
