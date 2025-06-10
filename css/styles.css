@@ -1,0 +1,175 @@
+/* Base Styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f8f9ff;
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+    color: #333;
+}
+
+.countdown-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.countdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.countdown-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Time Block Styles */
+.time-block {
+    background: rgba(255, 255, 255, 0.75);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+#mainCountdown .time-block {
+    padding: 1rem;
+}
+
+.time-block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.time-value {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.time-label {
+    font-size: 0.75rem;
+    text-transform: capitalize;
+}
+
+/* Add Button Styles */
+.add-button {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    transition: all 0.3s ease;
+    color: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-height: 150px;
+}
+
+.add-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+}
+
+/* Modal Styles */
+#modalOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#modalOverlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+#modalOverlay .modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 28rem;
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#modalOverlay.active .modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* Theme Switcher Button */
+.theme-switch {
+    background: white;
+    border: 2px solid #4f46e5;
+    color: #4f46e5;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+
+.theme-switch:hover {
+    background: #4f46e5;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(79,70,229,0.2), 0 2px 4px -1px rgba(79,70,229,0.12);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalEnter {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes rotateDrum {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes explode {
+    0% { transform: scale(0) translateY(0); opacity: 1; }
+    100% { transform: scale(1.5) translateY(-15px); opacity: 0; }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.animate-modalEnter {
+    animation: modalEnter 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
