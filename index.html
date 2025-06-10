@@ -258,7 +258,8 @@
             const currentTimeStr = now.toLocaleTimeString('vi-VN', timeOptions);
             
             // Cập nhật âm lịch sử dụng LunarDateConverter module
-            const lunarDate = LunarDateConverter.getCurrentLunarDate();
+            const converter = new LunarDateConverter();
+            const lunarDate = converter.getCurrentLunarInfo();
             const currentLunarStr = `${lunarDate.day}/${lunarDate.month}/${lunarDate.year}${lunarDate.isLeap ? ' (nhuận)' : ''}`;
             
             // Cập nhật DOM
