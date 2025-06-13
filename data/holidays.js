@@ -1,5 +1,5 @@
 // Holiday configuration data
-const HOLIDAYS_DATA = [
+export const HOLIDAYS_DATA = [
     { 
         idPrefix: 'lunar', 
         title: 'Tết Nguyên Đán', 

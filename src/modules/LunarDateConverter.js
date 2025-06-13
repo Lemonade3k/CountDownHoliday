@@ -1,170 +1,161 @@
-/**
- * Lunar Calendar Conversion Module
- * Uses lunar-javascript library for accurate lunar date conversion
- */
+// Thuật toán chuyển đổi dương lịch sang âm lịch chính xác
+function jdFromDate(dd, mm, yy) {
+    let a = Math.floor((14 - mm) / 12);
+    let y = yy - a;
+    let m = mm + 12 * a - 3;
+    let jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) + 1721119;
+    return jd;
+}
+
+function newMoon(k) {
+    let T = k / 1236.85;
+    let T2 = T * T;
+    let T3 = T2 * T;
+    let dr = Math.PI / 180;
+    let Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
+    Jd1 = Jd1 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    let M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+    let Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+    let F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+    C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
+    C1 = C1 - 0.0004 * Math.sin(dr * 3 * Mpr);
+    C1 = C1 + 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
+    C1 = C1 - 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+    C1 = C1 - 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+    C1 = C1 + 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    let deltaT = 0;
+    if (T < -11) {
+        deltaT = 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
+    } else {
+        deltaT = -0.000278 + 0.000265 * T + 0.000262 * T2;
+    }
+    let JdNew = Jd1 + C1 - deltaT;
+    return JdNew;
+}
+
+function sunLongitude(jdn) {
+    let T = (jdn - 2451545.0) / 36525;
+    let T2 = T * T;
+    let dr = Math.PI / 180;
+    let M = 357.5291 + 35999.0503 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+    let L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+    let DL = (1.9146 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
+    DL = DL + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.00029 * Math.sin(dr * 3 * M);
+    let L = L0 + DL;
+    L = L - 360 * (Math.floor(L / 360));
+    return L;
+}
+
+function getSunLongitude(dayNumber, timeZone) {
+    return Math.floor(sunLongitude(dayNumber - 0.5 - timeZone / 24) / 30);
+}
+
+function getNewMoonDay(k, timeZone) {
+    return Math.floor(newMoon(k) + 0.5 + timeZone / 24);
+}
+
+function getLunarMonth11(yy, timeZone) {
+    let off = jdFromDate(31, 12, yy) - 2415021;
+    let k = Math.floor(off / 29.530588853);
+    let nm = getNewMoonDay(k, timeZone);
+    let sunLong = getSunLongitude(nm, timeZone);
+    if (sunLong >= 9) {
+        nm = getNewMoonDay(k - 1, timeZone);
+    }
+    return nm;
+}
+
+function getLeapMonthOffset(a11, timeZone) {
+    let k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+    let last = 0;
+    let i = 1;
+    let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    do {
+        last = arc;
+        i++;
+        arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    } while (arc != last && i < 14);
+    return i - 1;
+}
+
+// Đổi tên hàm nội bộ để tránh trùng tên nếu muốn export cả class và hàm này riêng
+function solarToLunarInternal(dd, mm, yy) {
+    let timeZone = 7; // Múi giờ Việt Nam
+    let dayNumber = jdFromDate(dd, mm, yy);
+    let k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+    let monthStart = getNewMoonDay(k + 1, timeZone);
+    if (monthStart > dayNumber) {
+        monthStart = getNewMoonDay(k, timeZone);
+    }
+    let a11 = getLunarMonth11(yy, timeZone);
+    let b11 = a11;
+    let lunarYear;
+    if (a11 >= monthStart) {
+        lunarYear = yy;
+        a11 = getLunarMonth11(yy - 1, timeZone);
+    } else {
+        lunarYear = yy + 1;
+        b11 = getLunarMonth11(yy + 1, timeZone);
+    }
+    let lunarDay = dayNumber - monthStart + 1;
+    let diff = Math.floor((monthStart - a11) / 29);
+    let lunarLeap = 0;
+    let lunarMonth = diff + 11;
+    if (b11 - a11 > 365) {
+        let leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+        if (diff >= leapMonthDiff) {
+            lunarMonth = diff + 10;
+            if (diff == leapMonthDiff) {
+                lunarLeap = 1;
+            }
+        }
+    }
+    if (lunarMonth > 12) {
+        lunarMonth = lunarMonth - 12;
+    }
+    if (lunarMonth >= 11 && diff < 4) {
+        lunarYear -= 1;
+    }
+    return {
+        day: lunarDay,
+        month: lunarMonth,
+        year: lunarYear,
+        leap: lunarLeap
+    };
+}
 
 export class LunarDateConverter {
-    constructor() {
-        // Múi giờ Việt Nam (UTC+7)
-        this.VIETNAM_TIMEZONE_OFFSET = 7 * 60 * 60 * 1000;
-        
-        // Bảng tháng âm lịch với số ngày chính xác
-        this.lunarMonthDays = [29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30];
-        
-        // Năm nhuận âm lịch (có tháng 13)
-        this.leapYears = [2020, 2023, 2025, 2028, 2031, 2033, 2036, 2039, 2042, 2044];
-        
-        // Ngày Tết Nguyên Đán theo năm dương lịch
-        this.tetDates = {
-            2024: new Date(2024, 1, 10), // 10/2/2024
-            2025: new Date(2025, 0, 29), // 29/1/2025
-            2026: new Date(2026, 1, 17), // 17/2/2026
-            2027: new Date(2027, 1, 6),  // 6/2/2027
-            2028: new Date(2028, 0, 26), // 26/1/2028
-            2029: new Date(2029, 1, 13), // 13/2/2029
-            2030: new Date(2030, 1, 3),  // 3/2/2030
-        };
-    }
-
-    // Lấy thời gian hiện tại theo múi giờ Việt Nam
-    getVietnamTime() {
-        const now = new Date();
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        return new Date(utc + this.VIETNAM_TIMEZONE_OFFSET);
-    }
-
-    // Chuyển đổi ngày dương lịch sang âm lịch
-    solarToLunar(solarDate) {
-        const vietnamDate = this.adjustToVietnamTimezone(solarDate);
-        const year = vietnamDate.getFullYear();
-        
-        // Tìm ngày Tết gần nhất
-        let tetDate = this.tetDates[year];
-        if (!tetDate || vietnamDate < tetDate) {
-            tetDate = this.tetDates[year - 1];
-            if (!tetDate) {
-                // Fallback calculation nếu không có dữ liệu
-                return this.fallbackCalculation(vietnamDate);
-            }
-        }
-
-        // Tính số ngày từ Tết đến ngày hiện tại
-        const daysDiff = Math.floor((vietnamDate - tetDate) / (24 * 60 * 60 * 1000));
-        
-        if (daysDiff < 0) {
-            // Nếu chưa đến Tết, tính từ Tết năm trước
-            const prevTet = this.tetDates[year - 1];
-            if (prevTet) {
-                const prevDaysDiff = Math.floor((vietnamDate - prevTet) / (24 * 60 * 60 * 1000));
-                return this.calculateLunarDate(prevDaysDiff, year - 1);
-            }
-        }
-
-        return this.calculateLunarDate(daysDiff, year);
-    }
-
-    // Điều chỉnh thời gian về múi giờ Việt Nam
-    adjustToVietnamTimezone(date) {
-        const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-        return new Date(utc + this.VIETNAM_TIMEZONE_OFFSET);
-    }
-
-    // Tính toán ngày âm lịch từ số ngày kể từ Tết
-    calculateLunarDate(daysDiff, lunarYear) {
-        if (daysDiff === 0) {
-            return { day: 1, month: 1, year: lunarYear };
-        }
-
-        let remainingDays = daysDiff;
-        let month = 1;
-        let day = 1;
-
-        // Kiểm tra năm nhuận
-        const isLeapYear = this.leapYears.includes(lunarYear);
-        const monthsInYear = isLeapYear ? 13 : 12;
-
-        while (remainingDays > 0 && month <= monthsInYear) {
-            const daysInMonth = this.getDaysInLunarMonth(month, lunarYear, isLeapYear);
-            
-            if (remainingDays >= daysInMonth) {
-                remainingDays -= daysInMonth;
-                month++;
-            } else {
-                day = remainingDays + 1;
-                break;
-            }
-        }
-
-        // Xử lý trường hợp vượt quá năm
-        if (month > monthsInYear) {
-            return this.calculateLunarDate(remainingDays, lunarYear + 1);
-        }
-
-        return { day, month, year: lunarYear };
-    }
-
-    // Lấy số ngày trong tháng âm lịch
-    getDaysInLunarMonth(month, year, isLeapYear) {
-        // Tháng nhuận thường là tháng 4 hoặc 5
-        if (isLeapYear && month === 4) {
-            return 29; // Tháng nhuận thường có 29 ngày
-        }
-        
-        // Quy luật chung: tháng lẻ 29 ngày, tháng chẵn 30 ngày
-        return month % 2 === 1 ? 29 : 30;
-    }
-
-    // Tính toán dự phòng khi không có dữ liệu chính xác
-    fallbackCalculation(date) {
-        const year = date.getFullYear();
-        const startOfYear = new Date(year, 0, 1);
-        const dayOfYear = Math.floor((date - startOfYear) / (24 * 60 * 60 * 1000));
-        
-        // Ước tính dựa trên chu kỳ âm lịch (khoảng 354 ngày/năm)
-        const lunarYear = year;
-        let remainingDays = dayOfYear - 30; // Ước tính Tết vào cuối tháng 1
-        
-        if (remainingDays < 0) {
-            remainingDays += 354; // Năm âm lịch trước
-        }
-
-        return this.calculateLunarDate(remainingDays, lunarYear);
-    }
-
-    // Lấy tên tháng âm lịch
-    getLunarMonthName(month) {
-        const monthNames = [
-            '', 'Giêng', 'Hai', 'Ba', 'Tư', 'Năm', 'Sáu',
-            'Bảy', 'Tám', 'Chín', 'Mười', 'Mười một', 'Chạp', 'Nhuận'
-        ];
-        return monthNames[month] || `Tháng ${month}`;
-    }
-
-    // Format ngày âm lịch thành chuỗi
-    formatLunarDate(lunarDate) {
-        const { day, month, year } = lunarDate;
-        const monthName = this.getLunarMonthName(month);
-        return `${day} ${monthName} ${year}`;
-    }
-
-    // Lấy thông tin chi tiết ngày âm lịch hiện tại
-    getCurrentLunarInfo() {
-        const now = this.getVietnamTime();
-        const lunarDate = this.solarToLunar(now);
-        
+    /**
+     * Chuyển đổi ngày dương lịch (dd, mm, yy) sang thông tin ngày âm lịch.
+     * @param {number} dd - Ngày (1-31).
+     * @param {number} mm - Tháng (1-12).
+     * @param {number} yy - Năm.
+     * @returns {{day: number, month: number, year: number, isLeap: boolean}} Thông tin ngày âm lịch.
+     */
+    convertToLunar(dd, mm, yy) {
+        const lunarResult = solarToLunarInternal(dd, mm, yy);
         return {
-            ...lunarDate,
-            formatted: this.formatLunarDate(lunarDate),
-            monthName: this.getLunarMonthName(lunarDate.month),
-            solarDate: now,
-            timezone: 'UTC+7 (Việt Nam)'
+            day: lunarResult.day,
+            month: lunarResult.month,
+            year: lunarResult.year,
+            isLeap: lunarResult.leap === 1 // Chuyển 0/1 thành boolean
         };
+    }
+
+    /**
+     * Lấy thông tin ngày âm lịch hiện tại.
+     * @returns {{day: number, month: number, year: number, isLeap: boolean}} Thông tin ngày âm lịch hiện tại.
+     */
+    getCurrentLunarInfo() {
+        const now = new Date();
+        const solarDay = now.getDate();
+        const solarMonth = now.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+        const solarYear = now.getFullYear();
+        return this.convertToLunar(solarDay, solarMonth, solarYear);
     }
 }
 
-// Export cho sử dụng
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = LunarDateConverter;
-} else {
-    window.LunarDateConverter = LunarDateConverter;
-}
+// Xóa các hàm cũ không còn cần thiết khi dùng class: getCurrentDateTime, displayCurrentDate
+// Xóa khối export cũ (module.exports / window.LunarCalendar)
+// Xóa lệnh gọi displayCurrentDate() tự động

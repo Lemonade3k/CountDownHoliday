@@ -191,50 +191,10 @@
 
     <!-- JavaScript Module -->
     <script type="module">
-        import { LunarDateConverter } from './src/modules/LunarDateConverter.js';
+        
+        import { HOLIDAYS_DATA as holidays } from './data/holidays.js';
 
-        // Dữ liệu các ngày lễ (chỉ còn 5 bộ đếm)
-        const holidays = [
-            {
-                idPrefix: 'lunar',
-                title: 'Tết Nguyên Đán',
-                targetDate: '2025-01-29T00:00:00',
-                showSeconds: true,
-                isLunar: true,
-                lunarDay: 1,
-                lunarMonth: 1
-            },
-            {
-                idPrefix: 'hung',
-                title: 'Giỗ Tổ Hùng Vương',
-                targetDate: '2025-04-07T00:00:00',
-                showSeconds: false, // Bỏ giây cho bộ đếm nhỏ
-                isLunar: true,
-                lunarDay: 10,
-                lunarMonth: 3
-            },
-            {
-                idPrefix: 'april30',
-                title: 'Ngày 30 tháng 4',
-                targetDate: '2025-04-30T00:00:00',
-                showSeconds: false, // Bỏ giây cho bộ đếm nhỏ
-                isLunar: false
-            },
-            {
-                idPrefix: 'vnnd',
-                title: 'Ngày Quốc khánh',
-                targetDate: '2025-09-02T00:00:00',
-                showSeconds: false, // Bỏ giây cho bộ đếm nhỏ
-                isLunar: false
-            },
-            {
-                idPrefix: 'western',
-                title: 'Tết Dương Lịch',
-                targetDate: '2026-01-01T00:00:00',
-                showSeconds: false, // Bỏ giây cho bộ đếm nhỏ
-                isLunar: false
-            }
-        ];
+        import { LunarDateConverter } from './src/modules/LunarDateConverter.js';
 
         // Hàm cập nhật ngày giờ hiện tại
         function updateCurrentDateTime() {
