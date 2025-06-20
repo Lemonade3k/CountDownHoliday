@@ -199,7 +199,6 @@
 #countdown-hung,
 #countdown-april30,
 #countdown-vnnd,
-#countdown-midautumn,
 #countdown-western {
     display: flex;
     align-items: center;
@@ -209,11 +208,11 @@
 
 /* Theme-specific colors cho compact display */
 .hung-kings-theme .compact-time-display {
-    color: #3730a3;
+    color: #caac05;
 }
 
 .hung-kings-theme .compact-time-labels {
-    color: #4f46e5;
+    color: #efc407;
 }
 
 .liberation-theme .compact-time-display {
@@ -232,14 +231,6 @@
     color: #e53e3e;
 }
 
-.mid-autumn-theme .compact-time-display {
-    color: #6b21a8;
-}
-
-.mid-autumn-theme .compact-time-labels {
-    color: #86198f;
-}
-
 .new-year-theme .compact-time-display {
     color: #15803d;
 }
@@ -248,14 +239,6 @@
     color: #16a34a;
 }
 
-.teachers-theme .compact-time-display {
-    color: #3730a3;
-    }
-    
-.teachers-theme .compact-time-labels {
-    color: #4f46e5;
-    }
-    
 /* Responsive Design */
 @media (max-width: 768px) {
     .countdown-container {
@@ -305,54 +288,38 @@
     }
 }
 
-/* Theme styles - Cập nhật để tương thích */
+/* Đồng bộ màu sắc cho từng theme */
 .tet-theme {
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-                url('../assets/tet.jpg');
+    background: linear-gradient(rgba(254, 242, 242, 0.95), rgba(254, 226, 226, 0.9));
     background-size: cover;
     background-position: center;
     border: 2px solid #ff4d4d;
 }
 
 .hung-kings-theme {
-    background: linear-gradient(rgba(255, 249, 240, 0.95), rgba(255, 245, 230, 0.9));
+    background: linear-gradient(rgba(255, 251, 235, 0.95), rgba(255, 250, 214, 0.9));
     border: 2px solid #d4a017;
 }
 
 .liberation-theme {
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-                url('../assets/Vietnam.png');
+    background: linear-gradient(rgba(239, 246, 255, 0.95), rgba(219, 234, 254, 0.9));
     background-size: cover;
     background-position: center;
     border: 2px solid #2196f3;
 }
 
 .national-theme {
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-                url('../assets/Vietnam.png');
+    background: linear-gradient(rgba(254, 242, 242, 0.95), rgba(254, 226, 226, 0.9));
     background-size: cover;
     background-position: center;
     border: 2px solid #e53935;
 }
 
-.mid-autumn-theme {
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-                url('../assets/moon.png');
-    background-size: cover;
-    background-position: center;
-    border: 2px solid #9c27b0;
-}
-
 .new-year-theme {
-    background: linear-gradient(135deg, #f0fff4, #e6ffe9);
+    background: linear-gradient(rgba(240, 253, 244, 0.95), rgba(220, 252, 231, 0.9));
     border: 2px solid #4caf50;
 }
 
-.teachers-theme {
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-                linear-gradient(135deg, #4f46e5, #3730a3);
-    border: 2px solid #4f46e5;
-}
 
 /* Animations - Loại bỏ các hiệu ứng có thể gây lỗi */
 @keyframes fadeIn {
@@ -383,7 +350,7 @@
     animation: modalEnter 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
-/* Rotating drum cho Hung Kings theme */
+/* Rotating drum cho Hung Kings theme 
 .rotating-drum {
     width: 100px;
     height: 100px;
@@ -410,3 +377,4 @@
     align-items: center;
     justify-content: center;
 }
+    Dùng sau */
