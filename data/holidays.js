@@ -37,15 +37,6 @@ export const HOLIDAYS_DATA = [
         iconClass: 'fa-star' 
     },
     { 
-        idPrefix: 'midautumn', 
-        title: 'Tết Trung Thu', 
-        note: '(âm lịch)', 
-        targetDate: '2024-09-17T00:00:00', 
-        isLunar: true, 
-        themeClass: 'mid-autumn-theme', 
-        iconClass: 'fa-moon' 
-    },
-    { 
         idPrefix: 'western', 
         title: 'Tết Dương Lịch', 
         note: 'Năm Mới!', 

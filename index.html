@@ -41,160 +41,92 @@
 
     <!-- Container chính với max-width cố định -->
     <div class="countdown-container max-w-6xl mx-auto">
-        <!-- Main Countdown - Tết Nguyên Đán (Full Width) -->
-        <section id="mainCountdown" class="tet-theme main-countdown-card rounded-2xl p-8 mb-8 shadow-lg relative border-2 border-red-200">
-            <div class="flex items-center justify-center mb-4">
-                <i class="fas fa-lantern festival-icon text-red-600 text-3xl mr-4"></i>
-                <h2 id="main-title" class="text-4xl font-bold text-red-700">Tết Nguyên Đán</h2>
-                </div>
-            <h3 id="main-note" class="text-xl text-red-500 mb-8 text-center">(âm lịch)</h3>
-            <div id="countdown-lunar" class="flex flex-wrap justify-center gap-6">
-                <!-- Main countdown time blocks -->
-                <div class="time-block main-time-block border-red-200">
-                    <span id="lunar-month" class="time-value text-red-700">0</span>
-                    <span class="time-label text-red-500">Tháng</span>
-                </div>
-                <div class="time-block main-time-block border-red-200">
-                    <span id="lunar-day" class="time-value text-red-700">0</span>
-                    <span class="time-label text-red-500">Ngày</span>
-                </div>
-                <div class="time-block main-time-block border-red-200">
-                    <span id="lunar-hour" class="time-value text-red-700">00</span>
-                    <span class="time-label text-red-500">Giờ</span>
-    </div>
-                <div class="time-block main-time-block border-red-200">
-                    <span id="lunar-minute" class="time-value text-red-700">00</span>
-                    <span class="time-label text-red-500">Phút</span>
-        </div>
-                <div class="time-block main-time-block border-red-200">
-                    <span id="lunar-second" class="time-value text-red-700">00</span>
-                    <span class="time-label text-red-500">Giây</span>
-        </div>
-                </div>
-        </section>
+        <!-- Container cho thẻ đếm ngược chính, sẽ được JS chèn vào -->
+        <div id="main-countdown-container"></div>
 
-        <!-- Grid Container cho 4 bộ đếm nhỏ (2x2) -->
-        <div class="small-countdowns-grid grid grid-cols-2 gap-6">
-            <!-- Giỗ Tổ Hùng Vương -->
-            <div id="hungCountdown" class="hung-kings-theme small-countdown-card rounded-xl p-6 shadow-lg relative border-2 border-yellow-200">
-                <div class="flex items-center justify-center mb-3">
-                    <i class="fas fa-drum festival-icon text-yellow-700 text-xl mr-2"></i>
-                    <h2 class="text-lg font-bold text-yellow-800 text-center">Giỗ Tổ Hùng Vương</h2>
-                </div>
-                <h3 class="text-sm text-yellow-600 mb-4 text-center">(âm lịch)</h3>
-                <div id="countdown-hung" class="flex align-items-center justify-center flex-1">
-                    <div class="compact-countdown">
-                        <div class="compact-time-display text-yellow-800">
-                            <span id="hung-month" class="time-number">0</span>
-                            <span class="time-separator">:</span>
-                            <span id="hung-day" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="hung-hour" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="hung-minute" class="time-number">00</span>
-                        </div>
-                        <div class="compact-time-labels text-yellow-600">
-                            <span class="compact-label">Tháng</span>
-                            <span class="compact-label">Ngày</span>
-                            <span class="compact-label">Giờ</span>
-                            <span class="compact-label">Phút</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ngày 30 tháng 4 -->
-            <div id="april30Countdown" class="liberation-theme small-countdown-card rounded-xl p-6 shadow-lg relative border-2 border-blue-200">
-                <div class="flex items-center justify-center mb-3">
-                    <i class="fas fa-dove festival-icon text-blue-700 text-xl mr-2"></i>
-                    <h2 class="text-lg font-bold text-blue-800 text-center">Ngày 30 tháng 4</h2>
-            </div>
-                <h3 class="text-sm text-blue-600 mb-4 text-center">Giải phóng miền Nam</h3>
-                <div id="countdown-april30" class="flex align-items-center justify-center flex-1">
-                    <div class="compact-countdown">
-                        <div class="compact-time-display text-blue-800">
-                            <span id="april30-month" class="time-number">0</span>
-                            <span class="time-separator">:</span>
-                            <span id="april30-day" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="april30-hour" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="april30-minute" class="time-number">00</span>
-    </div>
-                        <div class="compact-time-labels text-blue-600">
-                            <span class="compact-label">Tháng</span>
-                            <span class="compact-label">Ngày</span>
-                            <span class="compact-label">Giờ</span>
-                            <span class="compact-label">Phút</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ngày Quốc khánh -->
-            <div id="vnndCountdown" class="national-theme small-countdown-card rounded-xl p-6 shadow-lg relative border-2 border-red-200">
-                <div class="flex items-center justify-center mb-3">
-                    <i class="fas fa-star festival-icon text-red-700 text-xl mr-2"></i>
-                    <h2 class="text-lg font-bold text-red-800 text-center">Ngày Quốc khánh</h2>
-            </div>
-
-                <div id="countdown-vnnd" class="flex align-items-center justify-center flex-1">
-                    <div class="compact-countdown">
-                        <div class="compact-time-display text-red-800">
-                            <span id="vnnd-month" class="time-number">0</span>
-                            <span class="time-separator">:</span>
-                            <span id="vnnd-day" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="vnnd-hour" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="vnnd-minute" class="time-number">00</span>
-        </div>
-                        <div class="compact-time-labels text-red-600">
-                            <span class="compact-label">Tháng</span>
-                            <span class="compact-label">Ngày</span>
-                            <span class="compact-label">Giờ</span>
-                            <span class="compact-label">Phút</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tết Dương Lịch -->
-            <div id="westernCountdown" class="new-year-theme small-countdown-card rounded-xl p-6 shadow-lg relative border-2 border-green-200">
-                <div class="flex items-center justify-center mb-3">
-                    <i class="fas fa-firework festival-icon text-green-700 text-xl mr-2"></i>
-                    <h2 class="text-lg font-bold text-green-800 text-center">Tết Dương Lịch</h2>
-                </div>
-                <h3 class="text-sm text-green-600 mb-4 text-center">Chúc Mừng Năm Mới</h3>
-                <div id="countdown-western" class="flex align-items-center justify-center flex-1">
-                    <div class="compact-countdown">
-                        <div class="compact-time-display text-green-800">
-                            <span id="western-month" class="time-number">0</span>
-                            <span class="time-separator">:</span>
-                            <span id="western-day" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="western-hour" class="time-number">00</span>
-                            <span class="time-separator">:</span>
-                            <span id="western-minute" class="time-number">00</span>
-                        </div>
-                        <div class="compact-time-labels text-green-600">
-                            <span class="compact-label">Tháng</span>
-                            <span class="compact-label">Ngày</span>
-                            <span class="compact-label">Giờ</span>
-                            <span class="compact-label">Phút</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+        <!-- Container cho các thẻ đếm ngược nhỏ, sẽ được JS chèn vào -->
+        <div id="small-countdowns-container" class="small-countdowns-grid"></div>
         </div>
 
     <!-- JavaScript Module -->
     <script type="module">
         
         import { HOLIDAYS_DATA as holidays } from '/data/holidays.js';
-
         import { LunarDateConverter } from '/src/modules/LunarDateConverter.js';
+
+        // --- TEMPLATE GENERATION FUNCTIONS ---
+
+        /**
+         * Tạo mã HTML cho thẻ đếm ngược chính (loại lớn).
+         */
+        function generateMainCardHTML(holiday) {
+            return `
+                <section id="${holiday.idPrefix}Container" class="${holiday.themeClass} main-countdown-card rounded-2xl p-8 mb-8 shadow-lg relative">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="fas ${holiday.iconClass} festival-icon text-3xl mr-4"></i>
+                        <h2 class="text-4xl font-bold">${holiday.title}</h2>
+                    </div>
+                    ${holiday.note ? `<h3 class="text-xl mb-8 text-center">${holiday.note}</h3>` : ''}
+                    <div id="countdown-${holiday.idPrefix}" class="flex flex-wrap justify-center gap-6">
+                        <div class="time-block main-time-block">
+                            <span id="${holiday.idPrefix}-month" class="time-value">0</span>
+                            <span class="time-label">Tháng</span>
+                        </div>
+                        <div class="time-block main-time-block">
+                            <span id="${holiday.idPrefix}-day" class="time-value">0</span>
+                            <span class="time-label">Ngày</span>
+                        </div>
+                        <div class="time-block main-time-block">
+                            <span id="${holiday.idPrefix}-hour" class="time-value">00</span>
+                            <span class="time-label">Giờ</span>
+                        </div>
+                        <div class="time-block main-time-block">
+                            <span id="${holiday.idPrefix}-minute" class="time-value">00</span>
+                            <span class="time-label">Phút</span>
+                        </div>
+                        ${holiday.showSeconds ? `
+                        <div class="time-block main-time-block">
+                            <span id="${holiday.idPrefix}-second" class="time-value">00</span>
+                            <span class="time-label">Giây</span>
+                        </div>` : ''}
+                    </div>
+                </section>
+            `;
+        }
+
+        /**
+         * Tạo mã HTML cho thẻ đếm ngược phụ (loại nhỏ).
+         */
+        function generateSmallCardHTML(holiday) {
+            return `
+                <div id="${holiday.idPrefix}Container" class="${holiday.themeClass} small-countdown-card rounded-xl p-6 shadow-lg relative">
+                    <div class="flex items-center justify-center mb-3">
+                        <i class="fas ${holiday.iconClass} festival-icon text-xl mr-2"></i>
+                        <h2 class="text-lg font-bold text-center">${holiday.title}</h2>
+                    </div>
+                    ${holiday.note ? `<h3 class="text-sm mb-4 text-center">${holiday.note}</h3>` : ''}
+                    <div id="countdown-${holiday.idPrefix}" class="flex align-items-center justify-center flex-1">
+                        <div class="compact-countdown">
+                            <div class="compact-time-display">
+                                <span id="${holiday.idPrefix}-month" class="time-number">0</span>
+                                <span class="time-separator">:</span>
+                                <span id="${holiday.idPrefix}-day" class="time-number">00</span>
+                                <span class="time-separator">:</span>
+                                <span id="${holiday.idPrefix}-hour" class="time-number">00</span>
+                                <span class="time-separator">:</span>
+                                <span id="${holiday.idPrefix}-minute" class="time-number">00</span>
+                            </div>
+                            <div class="compact-time-labels">
+                                <span class="compact-label">Tháng</span>
+                                <span class="compact-label">Ngày</span>
+                                <span class="compact-label">Giờ</span>
+                                <span class="compact-label">Phút</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         // Hàm cập nhật ngày giờ hiện tại
         function updateCurrentDateTime() {
@@ -297,8 +229,27 @@
             updateCurrentDateTime();
         }
 
+        // --- INITIALIZATION ---
+
+        /**
+         * Khởi tạo trang, "vẽ" các thẻ đếm ngược từ dữ liệu.
+         */
+        function initializePage() {
+            const mainContainer = document.getElementById('main-countdown-container');
+            const smallContainer = document.getElementById('small-countdowns-container');
+
+            holidays.forEach(holiday => {
+                if (holiday.main) {
+                    mainContainer.innerHTML += generateMainCardHTML(holiday);
+                } else {
+                    smallContainer.innerHTML += generateSmallCardHTML(holiday);
+                }
+            });
+        }
+
         // Khởi tạo và cập nhật countdown
         document.addEventListener('DOMContentLoaded', () => {
+            initializePage(); // "Vẽ" các thẻ đếm ngược trước
             updateAllCountdowns();
             setInterval(updateAllCountdowns, 1000);
         });
