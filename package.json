@@ -1,0 +1,13 @@
+{
+  "name": "countdown-holiday",
+  "version": "1.0.0",
+  "description": "Countdown to Vietnamese holidays",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build required'",
+    "start": "echo 'Static site - serve index.html'"
+  },
+  "keywords": ["countdown", "holidays", "vietnam"],
+  "author": "",
+  "license": "MIT"
+} 

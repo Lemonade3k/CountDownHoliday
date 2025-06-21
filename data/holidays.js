@@ -39,7 +39,7 @@ export const HOLIDAYS_DATA = [
     { 
         idPrefix: 'western', 
         title: 'Tết Dương Lịch', 
-        note: 'Năm Mới!', 
+        note: 'Chúc Mừng Năm Mới!', 
         targetDate: '2025-01-01T00:00:00', 
         themeClass: 'new-year-theme', 
         iconClass: 'fa-glass-cheers' 
