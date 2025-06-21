@@ -1,8 +1,9 @@
 name = "countdown-holiday"
 compatibility_date = "2024-01-01"
 
-[site]
-bucket = "."
+# Configuration for Cloudflare Pages
+# This tells Cloudflare Pages that the output directory for the static site is the root folder.
+pages_build_output_dir = "."
 
 [build]
 command = "" 
