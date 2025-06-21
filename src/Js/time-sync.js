@@ -1,3 +1,5 @@
+import { LunarDateConverter } from '/src/modules/LunarDateConverter.js';
+
 class TimeSync {
     constructor() {
         this.vietnamTimezoneOffset = 7 * 60 * 60 * 1000; // UTC+7
@@ -8,8 +10,8 @@ class TimeSync {
     }
 
     // Khởi tạo đồng bộ thời gian
-    init() {
-        this.syncTime();
+    async init() {
+        await this.syncTime();
         // Đồng bộ lại mỗi 5 phút để đảm bảo độ chính xác
         this.syncInterval = setInterval(() => {
             this.syncTime();
@@ -146,8 +148,4 @@ class TimeSync {
 }
 
 // Export cho sử dụng
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = TimeSync;
-} else {
-    window.TimeSync = TimeSync;
-}
+export { TimeSync };
