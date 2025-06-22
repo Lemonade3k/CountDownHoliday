@@ -15,6 +15,7 @@ export class CountdownManager {
         
         const diff = target - now;
         
+        const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
         const totalSeconds = Math.floor(diff / 1000);
         const totalMinutes = Math.floor(totalSeconds / 60);
         const totalHours = Math.floor(totalMinutes / 60);
@@ -36,7 +37,7 @@ export class CountdownManager {
         const minutes = totalMinutes % 60;
         const seconds = totalSeconds % 60;
         
-        return { months, days, hours, minutes, seconds };
+        return { months, days, hours, minutes, seconds, totalDays };
     }
 
     updateAll(holidays) {

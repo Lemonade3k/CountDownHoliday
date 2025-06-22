@@ -41,6 +41,42 @@ class App {
     }
 
     /**
+     * Gắn sự kiện cho các nút chuyển đổi chế độ xem.
+     */
+    _setupViewToggles() {
+        this.holidays.forEach(holiday => {
+            if (holiday.main) {
+                const toggleBtn = document.getElementById(`toggle-view-${holiday.idPrefix}`);
+                const container = document.getElementById(`${holiday.idPrefix}Container`);
+
+                if (toggleBtn && container) {
+                    toggleBtn.addEventListener('click', () => {
+                        container.classList.toggle('view-total-days');
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * Tự động thay đổi chế độ xem dựa trên kích thước màn hình.
+     */
+    _handleResponsiveView() {
+        this.holidays.forEach(holiday => {
+            if (holiday.main) {
+                const container = document.getElementById(`${holiday.idPrefix}Container`);
+                if (container) {
+                    if (window.innerWidth <= 768) {
+                        container.classList.add('view-total-days');
+                    } else {
+                        container.classList.remove('view-total-days');
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Cập nhật tất cả các thành phần động trên trang.
      */
     _updateAll() {
@@ -58,6 +94,13 @@ class App {
         // "Vẽ" các thẻ đếm ngược
         initializePage(this.holidays); 
         
+        // Gắn sự kiện cho các nút bấm
+        this._setupViewToggles();
+
+        // Xử lý chế độ xem ban đầu và khi thay đổi kích thước cửa sổ
+        this._handleResponsiveView();
+        window.addEventListener('resize', () => this._handleResponsiveView());
+
         // Cập nhật lần đầu và bắt đầu vòng lặp
         this._updateAll();
         setInterval(() => this._updateAll(), 1000);

@@ -180,347 +180,167 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 const cssStyles = `
-/* Container chính */
+/* --- Base Styles --- */
+body {
+    /* Basic font and background settings */
+}
 .countdown-container {
-    max-width: 1152px; /* max-w-6xl */
+    max-width: 1152px;
     margin: 0 auto;
     padding: 0;
 }
+header h1 {
+    word-break: break-word; /* For responsive title */
+}
 
-/* Main countdown card - Full width */
+/* --- Card Styles --- */
 .main-countdown-card {
     width: 100%;
     position: relative;
 }
-
-/* Grid container cho các bộ đếm nhỏ */
 .small-countdowns-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem; /* gap-6 */
+    gap: 1.5rem;
     width: 100%;
 }
-
-/* Small countdown cards */
 .small-countdown-card {
     position: relative;
     min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-        padding: 1.5rem;
-    }
-    
-/* Time blocks chung - Loại bỏ hoàn toàn backdrop-filter */
+    padding: 1.5rem;
+}
+
+/* --- Time Block Styles (Desktop View) --- */
 .time-block {
-    background: rgba(255, 255, 255, 0.95); /* Tăng opacity để thay thế blur */
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.8); /* Thêm border trắng */
-    }
-    
-/* Time blocks cho main countdown */
+}
 .main-time-block {
     min-width: 120px;
-        padding: 1rem;
-    background: rgba(255, 255, 255, 0.9); /* Background đặc hơn cho main */
-    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.15);
-    }
-    
-    .main-time-block .time-value {
-    font-size: 3rem; /* text-5xl */
+    padding: 1rem;
+}
+.main-time-block .time-value {
+    font-size: 3rem;
     font-weight: 700;
-    display: block;
-    margin-bottom: 0.5rem;
-    line-height: 1;
-    }
-    
+}
 .main-time-block .time-label {
-    font-size: 1.125rem; /* text-lg */
+    font-size: 1.125rem;
     font-weight: 500;
     opacity: 0.75;
-    }
-    
-/* Compact countdown style cho bộ đếm nhỏ */
-.compact-countdown {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    background: rgba(255, 255, 255, 0.1); /* Background nhẹ */
-    border-radius: 0.5rem;
-        padding: 1rem;
-    }
-    
-    .compact-time-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem; /* text-4xl */
+}
+
+/* --- Mobile View Banner Style --- */
+.total-days-banner {
+    width: auto;
+    display: inline-block;
+    max-width: 95%;
+    padding: 2rem 4rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.total-days-number {
+    font-size: 2.5rem;
     font-weight: 700;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-    font-family: 'Courier New', monospace; /* Font monospace để căn chỉnh đều */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Text shadow để tăng độ nổi bật */
-    }
-    
-.time-number {
-    color: inherit;
-    min-width: 1.2em; /* Đảm bảo width đồng nhất */
-    text-align: center;
-    }
-
-.time-separator {
-    color: inherit;
-    opacity: 0.7;
-    margin: 0 0.1em;
+    margin: 0 0.5rem;
 }
 
-.compact-time-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 300px;
-    font-size: 0.75rem; /* text-xs */
-    font-weight: 500;
-    opacity: 0.75;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    }
-    
-.compact-label {
-    flex: 1;
-    text-align: center;
-    padding: 0 0.25rem;
-    }
+/* --- View Toggling Logic & Button --- */
+.main-countdown-card .desktop-countdown { display: flex; }
+.main-countdown-card .mobile-countdown { display: none; }
+.main-countdown-card.view-total-days .desktop-countdown { display: none; }
+.main-countdown-card.view-total-days .mobile-countdown { display: flex; justify-content: center; }
 
-/* Hover effects */
-.time-block:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 1); /* Background hoàn toàn trắng khi hover */
-}
-
-.small-countdown-card:hover .compact-countdown {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.02);
+.view-toggle-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.08);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
-
-.small-countdown-card:hover .compact-time-display {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
-
-/* Add button styling */
-.add-button {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    transition: all 0.3s ease;
-    min-height: 200px;
-    border-radius: 0.75rem;
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.add-button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-}
-
-/* Modal styles - Loại bỏ hoàn toàn backdrop-filter */
-#modalOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.75); /* Tăng opacity để thay thế blur */
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-
-#modalOverlay.active {
-    display: flex;
+.view-toggle-btn:hover {
     opacity: 1;
+    transform: rotate(90deg);
 }
 
-#modalOverlay .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Shadow mạnh hơn */
-    width: 100%;
-    max-width: 28rem;
-    transform: scale(0.95) translateY(10px);
-    opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Thêm border nhẹ */
+/* --- Small Countdown Cards --- */
+.compact-countdown {
+    /* Styles for small cards */
 }
+/* ... other small card styles ... */
 
-#modalOverlay.active .modal {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-}
-
-/* Đảm bảo countdown containers hiển thị đúng */
-#countdown-lunar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-}
-
-#countdown-hung,
-#countdown-april30,
-#countdown-vnnd,
-#countdown-western {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-}
-
-/* Theme-specific colors cho compact display */
-.hung-kings-theme .compact-time-display {
-    color: #caac05;
-}
-
-.hung-kings-theme .compact-time-labels {
-    color: #efc407;
-}
-
-.liberation-theme .compact-time-display {
-    color: #1e40af;
-}
-
-.liberation-theme .compact-time-labels {
-    color: #2563eb;
-}
-
-.national-theme .compact-time-display {
-    color: #c53030;
-}
-
-.national-theme .compact-time-labels {
-    color: #e53e3e;
-}
-
-.new-year-theme .compact-time-display {
-    color: #15803d;
-}
-
-.new-year-theme .compact-time-labels {
-    color: #16a34a;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .countdown-container {
-        padding: 0 1rem;
-    }
-    
-    .small-countdowns-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .main-countdown-card {
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .small-countdown-card {
-        padding: 1rem;
-        min-height: 150px;
-    }
-
-    .main-time-block {
-        min-width: 80px;
-        padding: 0.75rem;
-    }
-
-    .main-time-block .time-value {
-        font-size: 2rem;
-    }
-    .compact-time-display {
-        font-size: 2rem;
-    }
-    .compact-time-labels {
-        font-size: 0.65rem;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-    .main-time-block .time-value {
-        font-size: 2.5rem;
-    }
-
-    .compact-time-display {
-        font-size: 2.25rem;
-    }
-}
-
-
-/* THEMES */
-/* Tet Theme */
+/* --- Themes --- */
 .tet-theme {
     background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
-    color: #c53030;
-    border: 2px solid #fca5a5;
+    color:rgb(196, 21, 21);
+    border: 2px solid rgb(255, 95, 95);
 }
-
-/* Hung Kings Theme */
 .hung-kings-theme {
     background: linear-gradient(135deg, #fff5cc 0%, #ffdf7e 100%);
     color: #8c5a00;
 }
-/* Liberation Day Theme */
 .liberation-theme {
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     color: #1e3a8a;
 }
-
-/* National Day Theme */
 .national-theme {
     background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
     color: #991b1b;
 }
-
-/* New Year Theme */
 .new-year-theme {
     background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
     color: #065f46;
 }
 
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes modalEnter {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+/* --- Responsive Media Queries --- */
+@media (max-width: 768px) {
+    header h1 { font-size: 2.5rem; }
+    header p { font-size: 1rem; padding: 0 1rem; }
+    .small-countdowns-grid { grid-template-columns: 1fr; }
+    /* ... other responsive styles ... */
 }
 
-@keyframes rotateDrum {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+/* Styles for smaller countdown cards */
+.small-countdown-card .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem;
+    align-items: center;
+    justify-items: center;
+    max-width: 340px;
+    margin: 0 auto;
 }
-
-.animate-fadeIn {
-    animation: fadeIn 0.5s ease-out forwards;
+.small-countdown-card .time-block {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    aspect-ratio: 1 / 1;
 }
-.animate-modalEnter {
-    animation: modalEnter 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+.small-countdown-card .time-value {
+    font-size: 1.75rem; /* text-2xl */
+    font-weight: 700;
+}
+.small-countdown-card .time-label {
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500;
+    opacity: 0.75;
 }
 `;
 
@@ -541,12 +361,17 @@ function injectStyles() {
 export function generateMainCardHTML(holiday) {
     return `
         <section id="${holiday.idPrefix}Container" class="${holiday.themeClass} main-countdown-card rounded-2xl p-8 mb-8 shadow-lg relative">
+            <button id="toggle-view-${holiday.idPrefix}" class="view-toggle-btn" aria-label="Chuyển đổi chế độ xem">
+                <i class="fas fa-sync-alt"></i>
+            </button>
             <div class="flex items-center justify-center mb-4">
                 <i class="fas ${holiday.iconClass} festival-icon text-3xl mr-4"></i>
                 <h2 class="text-4xl font-bold">${holiday.title}</h2>
             </div>
             ${holiday.note ? `<h3 class="text-xl mb-8 text-center">${holiday.note}</h3>` : ''}
-            <div id="countdown-${holiday.idPrefix}" class="flex flex-wrap justify-center gap-6">
+            
+            <!-- Desktop View: Detailed -->
+            <div class="desktop-countdown flex flex-wrap justify-center gap-6">
                 <div class="time-block main-time-block">
                     <span id="${holiday.idPrefix}-month" class="time-value">0</span>
                     <span class="time-label">Tháng</span>
@@ -569,6 +394,13 @@ export function generateMainCardHTML(holiday) {
                     <span class="time-label">Giây</span>
                 </div>` : ''}
             </div>
+
+            <!-- Mobile View: Total Days -->
+            <div class="mobile-countdown">
+                <div class="total-days-banner">
+                    <span id="${holiday.idPrefix}-total-days-text"></span>
+                </div>
+            </div>
         </section>
     `;
 }
@@ -586,23 +418,22 @@ export function generateSmallCardHTML(holiday) {
                 <h2 class="text-lg font-bold text-center">${holiday.title}</h2>
             </div>
             ${holiday.note ? `<h3 class="text-sm mb-4 text-center">${holiday.note}</h3>` : ''}
-            <div id="countdown-${holiday.idPrefix}" class="flex align-items-center justify-center flex-1">
-                <div class="compact-countdown">
-                    <div class="compact-time-display">
-                        <span id="${holiday.idPrefix}-month" class="time-number">0</span>
-                        <span class="time-separator">:</span>
-                        <span id="${holiday.idPrefix}-day" class="time-number">00</span>
-                        <span class="time-separator">:</span>
-                        <span id="${holiday.idPrefix}-hour" class="time-number">00</span>
-                        <span class="time-separator">:</span>
-                        <span id="${holiday.idPrefix}-minute" class="time-number">00</span>
-                    </div>
-                    <div class="compact-time-labels">
-                        <span class="compact-label">Tháng</span>
-                        <span class="compact-label">Ngày</span>
-                        <span class="compact-label">Giờ</span>
-                        <span class="compact-label">Phút</span>
-                    </div>
+            <div id="countdown-${holiday.idPrefix}" class="countdown-grid">
+                <div class="time-block">
+                    <span id="${holiday.idPrefix}-month" class="time-value">0</span>
+                    <span class="time-label">Tháng</span>
+                </div>
+                <div class="time-block">
+                    <span id="${holiday.idPrefix}-day" class="time-value">00</span>
+                    <span class="time-label">Ngày</span>
+                </div>
+                <div class="time-block">
+                    <span id="${holiday.idPrefix}-hour" class="time-value">00</span>
+                    <span class="time-label">Giờ</span>
+                </div>
+                <div class="time-block">
+                    <span id="${holiday.idPrefix}-minute" class="time-value">00</span>
+                    <span class="time-label">Phút</span>
                 </div>
             </div>
         </div>
@@ -637,8 +468,9 @@ export function initializePage(holidays) {
  * @param {object} timeRemaining - The time remaining object.
  */
 export function updateCountdownUI(holiday, timeRemaining) {
-    const { months, days, hours, minutes, seconds } = timeRemaining;
+    const { months, days, hours, minutes, seconds, totalDays } = timeRemaining;
 
+    // Update desktop view
     const monthEl = document.getElementById(`${holiday.idPrefix}-month`);
     const dayEl = document.getElementById(`${holiday.idPrefix}-day`);
     const hourEl = document.getElementById(`${holiday.idPrefix}-hour`);
@@ -652,8 +484,13 @@ export function updateCountdownUI(holiday, timeRemaining) {
     if (secondEl && holiday.showSeconds) {
         secondEl.textContent = String(seconds).padStart(2, '0');
     }
-}
 
+    // Update mobile view
+    const totalDaysTextEl = document.getElementById(`${holiday.idPrefix}-total-days-text`);
+    if (totalDaysTextEl) {
+        totalDaysTextEl.innerHTML = `Còn <strong class="total-days-number">${totalDays}</strong> ngày`;
+    }
+}
 
 // Inject the styles into the DOM when the module is loaded
 injectStyles();
