@@ -248,11 +248,11 @@ header h1 {
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
     text-align: center;
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 4vw, 2rem);
     font-weight: 600;
 }
 .total-days-number {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 8vw, 3rem);
     font-weight: 700;
     margin: 0 0.5rem;
 }
@@ -342,6 +342,14 @@ header h1 {
     font-weight: 500;
     opacity: 0.75;
 }
+
+.view-toggle-btn.small-toggle-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+    top: 0.75rem;
+    right: 0.75rem;
+}
 `;
 
 /**
@@ -413,6 +421,9 @@ export function generateMainCardHTML(holiday) {
 export function generateSmallCardHTML(holiday) {
     return `
         <div id="${holiday.idPrefix}Container" class="${holiday.themeClass} small-countdown-card rounded-xl p-6 shadow-lg relative">
+            <button id="toggle-total-days-${holiday.idPrefix}" class="view-toggle-btn small-toggle-btn" aria-label="Xem tổng số ngày">
+                <i class="fas fa-sync-alt"></i>
+            </button>
             <div class="flex items-center justify-center mb-3">
                 <i class="fas ${holiday.iconClass} festival-icon text-xl mr-2"></i>
                 <h2 class="text-lg font-bold text-center">${holiday.title}</h2>
@@ -436,6 +447,9 @@ export function generateSmallCardHTML(holiday) {
                     <span class="time-label">Phút</span>
                 </div>
             </div>
+            <div id="${holiday.idPrefix}-total-days-banner" class="total-days-banner" style="display:none;">
+                <span id="${holiday.idPrefix}-total-days-text"></span>
+            </div>
         </div>
     `;
 }
@@ -458,6 +472,27 @@ export function initializePage(holidays) {
             mainContainer.innerHTML += generateMainCardHTML(holiday);
         } else {
             smallContainer.innerHTML += generateSmallCardHTML(holiday);
+        }
+    });
+
+    // Thêm sự kiện toggle cho các small countdown
+    holidays.forEach(holiday => {
+        if (!holiday.main) {
+            const btn = document.getElementById(`toggle-total-days-${holiday.idPrefix}`);
+            const grid = document.getElementById(`countdown-${holiday.idPrefix}`);
+            const banner = document.getElementById(`${holiday.idPrefix}-total-days-banner`);
+            if (btn && grid && banner) {
+                btn.addEventListener('click', () => {
+                    const isBannerVisible = banner.style.display !== 'none';
+                    if (isBannerVisible) {
+                        banner.style.display = 'none';
+                        grid.style.display = '';
+                    } else {
+                        banner.style.display = '';
+                        grid.style.display = 'none';
+                    }
+                });
+            }
         }
     });
 }
@@ -485,9 +520,10 @@ export function updateCountdownUI(holiday, timeRemaining) {
         secondEl.textContent = String(seconds).padStart(2, '0');
     }
 
-    // Update mobile view
+    // Update mobile view (main card)
     const totalDaysTextEl = document.getElementById(`${holiday.idPrefix}-total-days-text`);
-    if (totalDaysTextEl) {
+    const totalDaysBanner = document.getElementById(`${holiday.idPrefix}-total-days-banner`);
+    if (totalDaysTextEl && (holiday.main || (totalDaysBanner && totalDaysBanner.style.display !== 'none'))) {
         totalDaysTextEl.innerHTML = `Còn <strong class="total-days-number">${totalDays}</strong> ngày`;
     }
 }
