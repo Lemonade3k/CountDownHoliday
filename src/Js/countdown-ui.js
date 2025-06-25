@@ -130,7 +130,11 @@ header h1 {
 @media (max-width: 768px) {
     header h1 { font-size: 2.5rem; }
     header p { font-size: 1rem; padding: 0 1rem; }
-    .small-countdowns-grid { grid-template-columns: 1fr; }
+    .small-countdowns-grid { 
+        grid-template-columns: 1fr; 
+        gap: 1rem;
+        padding: 0 1rem;
+    }
     
     /* Auto-scaling for total days banner on mobile */
     .total-days-banner {
@@ -153,6 +157,33 @@ header h1 {
     .main-countdown-card .mobile-countdown .total-days-number {
         font-size: clamp(1.25rem, 7vw, 2.5rem);
         margin: 0 0.4rem;
+    }
+
+    /* Small countdown cards mobile optimization */
+    .small-countdown-card {
+        min-height: 180px;
+        padding: 1rem;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .small-countdown-card .countdown-grid {
+        max-width: 100%;
+        gap: 0.25rem;
+        padding: 0.25rem;
+    }
+
+    .small-countdown-card .time-block {
+        padding: 0.75rem 0.5rem;
+        min-width: 60px;
+    }
+
+    .small-countdown-card .time-value {
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
+    }
+
+    .small-countdown-card .time-label {
+        font-size: clamp(0.625rem, 2.5vw, 0.75rem);
     }
 }
 
@@ -177,6 +208,66 @@ header h1 {
     .main-countdown-card .mobile-countdown .total-days-number {
         font-size: clamp(1rem, 6vw, 2rem);
         margin: 0 0.3rem;
+    }
+
+    /* Small countdown cards extra small screen optimization */
+    .small-countdowns-grid {
+        gap: 0.75rem;
+        padding: 0 0.75rem;
+    }
+
+    .small-countdown-card {
+        min-height: 160px;
+        padding: 0.75rem;
+    }
+
+    .small-countdown-card .countdown-grid {
+        gap: 0.2rem;
+        padding: 0.2rem;
+    }
+
+    .small-countdown-card .time-block {
+        padding: 0.5rem 0.25rem;
+        min-width: 50px;
+    }
+
+    .small-countdown-card .time-value {
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+    }
+
+    .small-countdown-card .time-label {
+        font-size: clamp(0.5rem, 2vw, 0.625rem);
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .small-countdowns-grid {
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .small-countdown-card {
+        min-height: 140px;
+        padding: 0.5rem;
+    }
+
+    .small-countdown-card .countdown-grid {
+        gap: 0.15rem;
+        padding: 0.15rem;
+    }
+
+    .small-countdown-card .time-block {
+        padding: 0.4rem 0.2rem;
+        min-width: 45px;
+    }
+
+    .small-countdown-card .time-value {
+        font-size: clamp(0.875rem, 3vw, 1.125rem);
+    }
+
+    .small-countdown-card .time-label {
+        font-size: clamp(0.45rem, 1.8vw, 0.55rem);
     }
 }
 
@@ -277,12 +368,35 @@ header h1 {
     }
 }
 
+@media (max-width: 360px) {
+    .small-countdown-card .total-days-banner {
+        font-size: clamp(0.75rem, 3.5vw, 1rem);
+        padding: 0.4rem 0.6rem;
+        max-width: 75%;
+    }
+    
+    .small-countdown-card .total-days-number {
+        font-size: clamp(0.75rem, 3.5vw, 1rem);
+        margin: 0 0.1rem;
+    }
+}
+
 .view-toggle-btn.small-toggle-btn {
     width: 28px;
     height: 28px;
     font-size: 1rem;
     top: 0.75rem;
     right: 0.75rem;
+}
+
+.main-countdown-card h2 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+    text-align: center;
 }
 `;
 
