@@ -185,6 +185,8 @@ header h1 {
     .small-countdown-card .time-label {
         font-size: clamp(0.625rem, 2.5vw, 0.75rem);
     }
+
+    .main-countdown-card h2 { font-size: 1.7rem; }
 }
 
 /* Extra small screens */
@@ -238,6 +240,8 @@ header h1 {
     .small-countdown-card .time-label {
         font-size: clamp(0.5rem, 2vw, 0.625rem);
     }
+
+    .main-countdown-card h2 { font-size: 1.3rem; }
 }
 
 /* Very small screens */
@@ -344,27 +348,23 @@ header h1 {
 /* Responsive scaling for small countdown cards */
 @media (max-width: 768px) {
     .small-countdown-card .total-days-banner {
-        font-size: clamp(1rem, 5vw, 1.5rem);
-        padding: 0.75rem 1rem;
-        max-width: 85%;
+        font-size: 1.2rem;
+        padding: 0.6em 1em;
     }
     
     .small-countdown-card .total-days-number {
-        font-size: clamp(1rem, 5vw, 1.5rem);
-        margin: 0 0.2rem;
+        font-size: 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .small-countdown-card .total-days-banner {
-        font-size: clamp(0.875rem, 4vw, 1.25rem);
-        padding: 0.5rem 0.75rem;
-        max-width: 80%;
+        font-size: 1.1rem;
+        padding: 0.5em 0.8em;
     }
     
     .small-countdown-card .total-days-number {
-        font-size: clamp(0.875rem, 4vw, 1.25rem);
-        margin: 0 0.15rem;
+        font-size: 1.2rem;
     }
 }
 
@@ -390,13 +390,28 @@ header h1 {
 }
 
 .main-countdown-card h2 {
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    display: block;
+    font-size: 2.2rem;
+    font-weight: bold;
     text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    margin: 0;
+}
+
+.small-countdown-card .total-days-banner {
+    font-size: 1.4rem;
+    padding: 0.7em 1.2em;
+}
+.small-countdown-card .total-days-number {
+    font-size: 2rem;
+}
+@media (max-width: 768px) {
+    .small-countdown-card .total-days-banner { font-size: 1.2rem; padding: 0.6em 1em; }
+    .small-countdown-card .total-days-number { font-size: 1.5rem; }
+}
+@media (max-width: 480px) {
+    .small-countdown-card .total-days-banner { font-size: 1.1rem; padding: 0.5em 0.8em; }
+    .small-countdown-card .total-days-number { font-size: 1.2rem; }
 }
 `;
 
@@ -415,6 +430,7 @@ function injectStyles() {
  * @returns {string} The HTML string for the main card.
  */
 export function generateMainCardHTML(holiday) {
+    let title = holiday.title.replace('Nguyên Đán', 'Nguyên&nbsp;Đán');
     return `
         <section id="${holiday.idPrefix}Container" class="${holiday.themeClass} main-countdown-card rounded-2xl p-8 mb-8 shadow-lg relative">
             <button id="toggle-view-${holiday.idPrefix}" class="view-toggle-btn" aria-label="Chuyển đổi chế độ xem">
@@ -422,7 +438,7 @@ export function generateMainCardHTML(holiday) {
             </button>
             <div class="flex items-center justify-center mb-4">
                 <i class="fas ${holiday.iconClass} festival-icon text-3xl mr-4"></i>
-                <h2 class="text-4xl font-bold">${holiday.title}</h2>
+                <h2 class="text-4xl font-bold">${title}</h2>
             </div>
             ${holiday.note ? `<h3 class="text-xl mb-8 text-center">${holiday.note}</h3>` : ''}
             
