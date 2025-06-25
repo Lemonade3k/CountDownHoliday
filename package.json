@@ -4,7 +4,6 @@
   "description": "Countdown to Vietnamese holidays",
   "main": "index.html",
   "scripts": {
-    "build": "echo 'No build required'",
     "start": "echo 'Static site - serve index.html'"
   },
   "keywords": ["countdown", "holidays", "vietnam"],

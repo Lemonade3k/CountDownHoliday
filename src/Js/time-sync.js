@@ -106,38 +106,6 @@ class TimeSync {
         return days[dayIndex];
     }
 
-    // Tính toán thời gian còn lại đến một ngày cụ thể
-    getTimeUntil(targetDate) {
-        const now = this.getCurrentTime();
-        const target = new Date(targetDate);
-        const diff = target.getTime() - now.getTime();
-
-        if (diff <= 0) {
-            return {
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                total: 0,
-                expired: true
-            };
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        return {
-            days,
-            hours,
-            minutes,
-            seconds,
-            total: diff,
-            expired: false
-        };
-    }
-
     // Dọn dẹp khi không sử dụng
     destroy() {
         if (this.syncInterval) {

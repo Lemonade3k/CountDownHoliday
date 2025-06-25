@@ -155,7 +155,3 @@ export class LunarDateConverter {
         return this.convertToLunar(solarDay, solarMonth, solarYear);
     }
 }
-
-// Xóa các hàm cũ không còn cần thiết khi dùng class: getCurrentDateTime, displayCurrentDate
-// Xóa khối export cũ (module.exports / window.LunarCalendar)
-// Xóa lệnh gọi displayCurrentDate() tự động

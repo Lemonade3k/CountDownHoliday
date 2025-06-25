@@ -1,184 +1,3 @@
-class CountdownUI {
-    constructor() {
-        this.timeSync = new TimeSync();
-        this.lunarConverter = new LunarDateConverter();
-        this.currentTimeElement = null;
-        this.lunarDateElement = null;
-        this.updateInterval = null;
-    }
-
-    // Khởi tạo UI
-    async init() {
-        await this.timeSync.init();
-        this.createTimeDisplayElements();
-        this.startTimeUpdate();
-    }
-
-    // Tạo các element hiển thị thời gian
-    createTimeDisplayElements() {
-        // Tìm hoặc tạo element hiển thị thời gian hiện tại
-        this.currentTimeElement = document.getElementById('current-time');
-        if (!this.currentTimeElement) {
-            this.currentTimeElement = document.createElement('div');
-            this.currentTimeElement.id = 'current-time';
-            this.currentTimeElement.className = 'current-time-display';
-            
-            // Thêm vào header hoặc vị trí phù hợp
-            const header = document.querySelector('header') || document.body;
-            header.appendChild(this.currentTimeElement);
-        }
-
-        // Tìm hoặc tạo element hiển thị ngày âm lịch
-        this.lunarDateElement = document.getElementById('lunar-date');
-        if (!this.lunarDateElement) {
-            this.lunarDateElement = document.createElement('div');
-            this.lunarDateElement.id = 'lunar-date';
-            this.lunarDateElement.className = 'lunar-date-display';
-            
-            // Thêm sau element thời gian hiện tại
-            this.currentTimeElement.parentNode.insertBefore(
-                this.lunarDateElement, 
-                this.currentTimeElement.nextSibling
-            );
-        }
-    }
-
-    // Bắt đầu cập nhật thời gian
-    startTimeUpdate() {
-        this.updateTimeDisplay();
-        // Cập nhật mỗi giây
-        this.updateInterval = setInterval(() => {
-            this.updateTimeDisplay();
-        }, 1000);
-    }
-
-    // Cập nhật hiển thị thời gian
-    updateTimeDisplay() {
-        const timeInfo = this.timeSync.getDetailedTimeInfo();
-        this.updateCurrentTime(timeInfo);
-        this.updateLunarDate(timeInfo);
-    }
-
-    // Cập nhật hiển thị thời gian hiện tại
-    updateCurrentTime(timeInfo) {
-        if (!this.currentTimeElement) return;
-
-        const { solar } = timeInfo;
-        const html = `
-            <div class="time-container">
-                <div class="current-time">
-                    <i class="fas fa-clock"></i>
-                    <span class="time">${solar.time}</span>
-                </div>
-                <div class="current-date">
-                    <span class="day-of-week">${solar.dayOfWeek}</span>
-                    <span class="date">${solar.formatted}</span>
-                </div>
-                <div class="timezone">
-                    <small>${timeInfo.timezone}</small>
-                </div>
-            </div>
-        `;
-        
-        this.currentTimeElement.innerHTML = html;
-    }
-
-    // Cập nhật hiển thị ngày âm lịch
-    updateLunarDate(timeInfo) {
-        if (!this.lunarDateElement) return;
-
-        const { lunar } = timeInfo;
-        const html = `
-            <div class="lunar-container">
-                <div class="lunar-header">
-                    <i class="fas fa-moon"></i>
-                    <span class="lunar-title">Âm lịch</span>
-                </div>
-                <div class="lunar-date">
-                    <span class="lunar-day">${lunar.day}</span>
-                    <span class="lunar-month">${lunar.monthName}</span>
-                    <span class="lunar-year">${lunar.year}</span>
-                </div>
-                <div class="lunar-full">
-                    <small>${lunar.formatted}</small>
-                </div>
-                <div class="sync-status">
-                    <small class="sync-indicator ${timeInfo.syncStatus === 'Đã đồng bộ' ? 'synced' : 'not-synced'}">
-                        <i class="fas fa-sync-alt"></i>
-                        ${timeInfo.syncStatus}
-                    </small>
-                </div>
-            </div>
-        `;
-        
-        this.lunarDateElement.innerHTML = html;
-    }
-
-    // Cập nhật countdown cho các ngày lễ
-    updateCountdowns() {
-        const countdownElements = document.querySelectorAll('.countdown-card');
-        
-        countdownElements.forEach(element => {
-            const targetDate = element.dataset.targetDate;
-            if (!targetDate) return;
-
-            const timeUntil = this.timeSync.getTimeUntil(new Date(targetDate));
-            this.updateCountdownCard(element, timeUntil);
-        });
-    }
-
-    // Cập nhật một card countdown
-    updateCountdownCard(element, timeUntil) {
-        const daysElement = element.querySelector('.days .number');
-        const hoursElement = element.querySelector('.hours .number');
-        const minutesElement = element.querySelector('.minutes .number');
-        const secondsElement = element.querySelector('.seconds .number');
-
-        if (timeUntil.expired) {
-            element.classList.add('expired');
-            if (daysElement) daysElement.textContent = '00';
-            if (hoursElement) hoursElement.textContent = '00';
-            if (minutesElement) minutesElement.textContent = '00';
-            if (secondsElement) secondsElement.textContent = '00';
-        } else {
-            element.classList.remove('expired');
-            if (daysElement) daysElement.textContent = timeUntil.days.toString().padStart(2, '0');
-            if (hoursElement) hoursElement.textContent = timeUntil.hours.toString().padStart(2, '0');
-            if (minutesElement) minutesElement.textContent = timeUntil.minutes.toString().padStart(2, '0');
-            if (secondsElement) secondsElement.textContent = timeUntil.seconds.toString().padStart(2, '0');
-        }
-    }
-
-    // Lấy thông tin ngày âm lịch cho một ngày cụ thể
-    getLunarDateForDate(date) {
-        return this.lunarConverter.solarToLunar(date);
-    }
-
-    // Format ngày âm lịch cho hiển thị
-    formatLunarDateDisplay(lunarDate) {
-        return this.lunarConverter.formatLunarDate(lunarDate);
-    }
-
-    // Dọn dẹp khi không sử dụng
-    destroy() {
-        if (this.updateInterval) {
-            clearInterval(this.updateInterval);
-            this.updateInterval = null;
-        }
-        
-        if (this.timeSync) {
-            this.timeSync.destroy();
-        }
-    }
-}
-
-// Export cho sử dụng
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CountdownUI;
-} else {
-    window.CountdownUI = CountdownUI;
-}
-
 const cssStyles = `
 /* --- Base Styles --- */
 body {
@@ -206,11 +25,11 @@ header h1 {
 }
 .small-countdown-card {
     position: relative;
-    min-height: 200px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 1.5rem;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 200px;
 }
 
 /* --- Time Block Styles (Desktop View) --- */
@@ -243,13 +62,17 @@ header h1 {
     width: auto;
     display: inline-block;
     max-width: 95%;
-    padding: 2rem 4rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.08), 0 1px 2px -1px rgba(0,0,0,0.04);
     text-align: center;
-    font-size: clamp(1rem, 4vw, 2rem);
-    font-weight: 600;
+    font-size: clamp(1.5rem, 8vw, 3rem);
+    font-weight: 700;
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .total-days-number {
     font-size: clamp(1.5rem, 8vw, 3rem);
@@ -280,12 +103,6 @@ header h1 {
     transform: rotate(90deg);
 }
 
-/* --- Small Countdown Cards --- */
-.compact-countdown {
-    /* Styles for small cards */
-}
-/* ... other small card styles ... */
-
 /* --- Themes --- */
 .tet-theme {
     background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
@@ -314,19 +131,104 @@ header h1 {
     header h1 { font-size: 2.5rem; }
     header p { font-size: 1rem; padding: 0 1rem; }
     .small-countdowns-grid { grid-template-columns: 1fr; }
-    /* ... other responsive styles ... */
+    
+    /* Auto-scaling for total days banner on mobile */
+    .total-days-banner {
+        font-size: clamp(1rem, 6vw, 2rem);
+        padding: 0.75rem 1rem;
+        max-width: 90%;
+    }
+    
+    .total-days-number {
+        font-size: clamp(1rem, 6vw, 2rem);
+        margin: 0 0.25rem;
+    }
+    
+    /* Main countdown mobile view scaling */
+    .main-countdown-card .mobile-countdown .total-days-banner {
+        font-size: clamp(1.25rem, 7vw, 2.5rem);
+        padding: 1rem 1.25rem;
+    }
+    
+    .main-countdown-card .mobile-countdown .total-days-number {
+        font-size: clamp(1.25rem, 7vw, 2.5rem);
+        margin: 0 0.4rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .total-days-banner {
+        font-size: clamp(0.875rem, 5vw, 1.5rem);
+        padding: 0.5rem 0.75rem;
+        max-width: 85%;
+    }
+    
+    .total-days-number {
+        font-size: clamp(0.875rem, 5vw, 1.5rem);
+        margin: 0 0.2rem;
+    }
+    
+    .main-countdown-card .mobile-countdown .total-days-banner {
+        font-size: clamp(1rem, 6vw, 2rem);
+        padding: 0.75rem 1rem;
+    }
+    
+    .main-countdown-card .mobile-countdown .total-days-number {
+        font-size: clamp(1rem, 6vw, 2rem);
+        margin: 0 0.3rem;
+    }
 }
 
 /* Styles for smaller countdown cards */
+.small-countdown-card .countdown-grid,
+.small-countdown-card .total-days-banner {
+    transition: opacity 0.25s;
+}
 .small-countdown-card .countdown-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* 4 cột ngang */
     gap: 0.5rem;
     padding: 0.5rem;
     align-items: center;
     justify-items: center;
     max-width: 340px;
     margin: 0 auto;
+}
+.small-countdown-card .total-days-banner {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px #0001;
+    padding: 1rem 1.5rem;
+    min-width: 70px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem; /* giống .time-value */
+    font-weight: 700;
+    color: inherit;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.25s;
+    z-index: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
+.small-countdown-card.show-total-days .countdown-grid {
+    opacity: 0;
+    pointer-events: none;
+}
+.small-countdown-card.show-total-days .total-days-banner {
+    opacity: 1;
+    pointer-events: auto;
 }
 .small-countdown-card .time-block {
     width: 100%;
@@ -341,6 +243,38 @@ header h1 {
     font-size: 0.75rem; /* text-xs */
     font-weight: 500;
     opacity: 0.75;
+}
+.small-countdown-card .total-days-number {
+    font-size: 1.75rem; /* giống .time-value */
+    font-weight: 700;
+    margin: 0 0.3rem;
+}
+
+/* Responsive scaling for small countdown cards */
+@media (max-width: 768px) {
+    .small-countdown-card .total-days-banner {
+        font-size: clamp(1rem, 5vw, 1.5rem);
+        padding: 0.75rem 1rem;
+        max-width: 85%;
+    }
+    
+    .small-countdown-card .total-days-number {
+        font-size: clamp(1rem, 5vw, 1.5rem);
+        margin: 0 0.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .small-countdown-card .total-days-banner {
+        font-size: clamp(0.875rem, 4vw, 1.25rem);
+        padding: 0.5rem 0.75rem;
+        max-width: 80%;
+    }
+    
+    .small-countdown-card .total-days-number {
+        font-size: clamp(0.875rem, 4vw, 1.25rem);
+        margin: 0 0.15rem;
+    }
 }
 
 .view-toggle-btn.small-toggle-btn {
@@ -447,7 +381,7 @@ export function generateSmallCardHTML(holiday) {
                     <span class="time-label">Phút</span>
                 </div>
             </div>
-            <div id="${holiday.idPrefix}-total-days-banner" class="total-days-banner" style="display:none;">
+            <div id="${holiday.idPrefix}-total-days-banner" class="total-days-banner">
                 <span id="${holiday.idPrefix}-total-days-text"></span>
             </div>
         </div>
@@ -479,18 +413,10 @@ export function initializePage(holidays) {
     holidays.forEach(holiday => {
         if (!holiday.main) {
             const btn = document.getElementById(`toggle-total-days-${holiday.idPrefix}`);
-            const grid = document.getElementById(`countdown-${holiday.idPrefix}`);
-            const banner = document.getElementById(`${holiday.idPrefix}-total-days-banner`);
-            if (btn && grid && banner) {
+            const card = document.getElementById(`${holiday.idPrefix}Container`);
+            if (btn && card) {
                 btn.addEventListener('click', () => {
-                    const isBannerVisible = banner.style.display !== 'none';
-                    if (isBannerVisible) {
-                        banner.style.display = 'none';
-                        grid.style.display = '';
-                    } else {
-                        banner.style.display = '';
-                        grid.style.display = 'none';
-                    }
+                    card.classList.toggle('show-total-days');
                 });
             }
         }
@@ -529,4 +455,4 @@ export function updateCountdownUI(holiday, timeRemaining) {
 }
 
 // Inject the styles into the DOM when the module is loaded
-injectStyles();
+injectStyles(); 
