@@ -44,16 +44,7 @@ export const HOLIDAYS_DATA = [
         showSeconds: false,
         iconClass: 'fa-drum'
     },
-    {
-        idPrefix: 'new-year',
-        title: 'Tết Dương Lịch',
-        note: '',
-        solarDate: '01-01',
-        themeClass: 'new-year-theme',
-        main: false,
-        showSeconds: false,
-        iconClass: 'fa-champagne-glasses'
-    },
+    
     {
         idPrefix: 'liberation',
         title: 'Giải Phóng Miền Nam',
@@ -74,5 +65,15 @@ export const HOLIDAYS_DATA = [
         showSeconds: false,
         iconClass: 'fa-flag'
     }
+    {
+        idPrefix: 'new-year',
+        title: 'Tết Dương Lịch',
+        note: '',
+        solarDate: '01-01',
+        themeClass: 'new-year-theme',
+        main: false,
+        showSeconds: false,
+        iconClass: 'fa-champagne-glasses'
+    },
 ];
 
