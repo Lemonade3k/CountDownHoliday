@@ -10,6 +10,9 @@ class App {
         this.timeSync = new TimeSync();
         this.countdownManager = new CountdownManager(this.timeSync);
         this.lunarConverter = new LunarDateConverter();
+        
+        // Expose holidays data for UI
+        window.HOLIDAYS_DATA = this.holidays;
     }
 
     /**
@@ -23,7 +26,7 @@ class App {
         const currentDateStr = now.toLocaleDateString('vi-VN', dateOptions);
         
         // Cập nhật giờ
-        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const currentTimeStr = now.toLocaleTimeString('vi-VN', timeOptions);
         
         // Cập nhật âm lịch

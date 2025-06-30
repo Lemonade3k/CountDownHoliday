@@ -79,9 +79,8 @@ function getLeapMonthOffset(a11, timeZone) {
     return i - 1;
 }
 
-// Đổi tên hàm nội bộ để tránh trùng tên nếu muốn export cả class và hàm này riêng
 function solarToLunarInternal(dd, mm, yy) {
-    let timeZone = 7; // Múi giờ Việt Nam
+    let timeZone = 7;
     let dayNumber = jdFromDate(dd, mm, yy);
     let k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
     let monthStart = getNewMoonDay(k + 1, timeZone);
@@ -154,4 +153,4 @@ export class LunarDateConverter {
         const solarYear = now.getFullYear();
         return this.convertToLunar(solarDay, solarMonth, solarYear);
     }
-}
+} 
