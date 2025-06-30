@@ -44,7 +44,6 @@ export const HOLIDAYS_DATA = [
         showSeconds: false,
         iconClass: 'fa-drum'
     },
-    
     {
         idPrefix: 'liberation',
         title: 'Giải Phóng Miền Nam',
@@ -64,7 +63,7 @@ export const HOLIDAYS_DATA = [
         main: false,
         showSeconds: false,
         iconClass: 'fa-flag'
-    }
+    },
     {
         idPrefix: 'new-year',
         title: 'Tết Dương Lịch',
